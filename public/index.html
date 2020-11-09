@@ -39,12 +39,7 @@
     </style>
   </head>
   <body>
-    <div id="message">
-      <h2>Welcome</h2>
-      <h1>Firebase Hosting Setup Complete</h1>
-      <p>You're seeing this because you've successfully setup Firebase Hosting. Now it's time to go build something extraordinary!</p>
-      <a target="_blank" href="https://firebase.google.com/docs/hosting/">Open Hosting Documentation</a>
-    </div>
+    
     <p id="load">Firebase SDK Loading&hellip;</p>
 
     <script>
@@ -83,7 +78,35 @@
           console.error(e);
           loadEl.textContent = 'Error loading the Firebase SDK, check the console.';
         }
+
+        init();
+
       });
     </script>
+
+
+<h2> Player List </h2>
+<ul id="pl-ul">
+<!--
+
+var PLAYER_TEMPLATE =
+'<div class="player-container">' +
+'<div class="player"></div>' +
+'<div class="name"></div>' +
+'</div>';
+
+-->
+</ul>
+</h1>
+<form id="pl-add-form" action="#"><input type="text" id="pl-add-text"/><button id="pl-add-submit">add player</button>
+</form>
+<form id="snapshot-all" action="#"><button id="snapshot-all-submit">snapshot all</button>
+</form>
+<script src='app.js'></script>
+
+
+
+
+
   </body>
 </html>
