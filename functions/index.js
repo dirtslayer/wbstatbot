@@ -283,3 +283,46 @@ async function lastsnapshotfor(PID) {
 
     return null;
   });
+
+
+
+
+
+
+
+async function updateNames() {
+
+    /// for each player
+    /// get last snapshot
+    /// get name from last snapshot
+    /// update player collection name field for the player
+
+    const db = admin.firestore();
+
+    const snapshot = await db.collection('players').get();
+    snapshot.forEach(async (doc) => {
+        
+        var pid = doc.data().pid;
+        var did = doc.id;
+
+        var ls = await lastsnapshotfor(pid);
+        console.log(ls.Name);
+
+        const dRef = db.collection('players').doc(did);
+
+        const res = await dRef.set({
+            "name": ls.Name
+          }, { merge: true });
+          
+    });
+
+    return null;
+}
+
+exports.updatenames = functions.runWith(runtimeOpts).https.onRequest( async (request, response) => {
+    await updateNames();
+    response.contentType("text/plain");
+    response.send('Update Names complete');
+    return null;
+
+});
