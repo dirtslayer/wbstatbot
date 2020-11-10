@@ -326,3 +326,45 @@ exports.updatenames = functions.runWith(runtimeOpts).https.onRequest( async (req
     return null;
 
 });
+
+
+
+exports.serverip = functions.runWith(runtimeOpts).https.onRequest( async (request, response) => {
+    var page;
+ 
+        await axios.get('https://www.privateinternetaccess.com/pages/whats-my-ip/').then(
+            function (resp){
+                page = resp.data;
+                var r = '';
+                
+
+                const ldom = new JSDOM(resp.data);
+
+               // console.log(resp.data);
+
+                const ldoc = ldom.window.document;
+
+                var lnode = ldoc.evaluate('/html/body/div[3]/div[3]/div/div[1]/ul/li[1]/span', ldoc, null, 0, null);
+                r += 'IP:' + trimfixnode(lnode);
+                
+               
+               //     r = lnode.children[0].textContent; // + ' ' + lnode.children[1].children[0].textContent + '\n';
+                   // node = lnode.iterateNext();
+                
+                   
+
+                   var llnode = ldoc.evaluate('/html/body/div[3]/div[3]/div/div[1]/ul/li[6]/span', ldoc, null, 0, null);
+                   r += '\nUser-Agent:' + trimfixnode(llnode);
+
+                response.contentType("text/plain");
+                response.send(r);
+
+                return null;
+            }
+        );
+
+   
+  
+    return null;
+
+});
