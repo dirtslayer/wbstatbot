@@ -276,7 +276,7 @@ async function lastsnapshotfor(PID) {
   });
 
 
-  exports.snapshotallsched = functions.runWith(runtimeOpts).pubsub.schedule('every 10 minutes from 5:00 to 23:59').onRun( async (context) => {
+  exports.snapshotallsched = functions.runWith(runtimeOpts).pubsub.schedule('every 30 minutes from 3:58 to 23:59').onRun( async (context) => {
     var torettext = await snapShotAll();
    // response.contentType("text/plain");
     //response.send(torettext);

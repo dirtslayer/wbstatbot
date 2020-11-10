@@ -83,26 +83,34 @@ function initFirebaseAuth() {
     }
   }
   var PLAYER_TEMPLATE =
-    '<div class="player-container">' +
+    '<li>' +
+    
       '<div class="player"></div>' +
       '<div class="name"></div>' +
-    '</div>';
+      '<div style="height:300px"></div></li>';
+    
 
   function createAndInsertPlayer(id, timestamp) {
     const container = document.createElement('div');
     container.innerHTML = PLAYER_TEMPLATE;
-    const div = container.firstChild;
-    div.setAttribute('id', id);
+
+    const li = container.firstChild;
+    li.setAttribute('id', id);
+
+    const chartele = li.lastChild;
+    chartele.setAttribute('class','chart'+id); 
+
+    
   
     // If timestamp is null, assume we've gotten a brand new message.
     // https://stackoverflow.com/a/47781432/4816918
     timestamp = timestamp ? timestamp.toMillis() : Date.now();
-    div.setAttribute('timestamp', timestamp);
+    li.setAttribute('timestamp', timestamp);
   
     // figure out where to insert new message
     const existingPlayers = playerListElement.children;
     if (existingPlayers.length === 0) {
-      playerListElement.appendChild(div);
+      playerListElement.appendChild(li);
     } else {
       let playerListNode = existingPlayers[0];
   
@@ -122,10 +130,10 @@ function initFirebaseAuth() {
         playerListNode = playerListNode.nextSibling;
       }
   
-      playerListElement.insertBefore(div, playerListNode);
+      playerListElement.insertBefore(li, playerListNode);
     }
   
-    return div;
+    return li;
   }
   
   // Displays a Message in the UI.
@@ -155,10 +163,12 @@ var playerListElement = document.getElementById('pl-ul');
 
 //initFirebaseAuth();
 var app;
+var momentvar = moment();
 
 function init() {
     try {
         app = firebase.app();
+        console.log('moment: ' + momentvar);
     }
     catch (e) {
         console.error(e);
