@@ -87,9 +87,10 @@ function initFirebaseAuth() {
     
       '<div class="player"></div>' +
       '<div class="name"></div>' +
+      '<div class="stats"></div>' + 
       '<div style="height:300px"></div></li>';
     
-
+      
   function createAndInsertPlayer(id, timestamp) {
     const container = document.createElement('div');
     container.innerHTML = PLAYER_TEMPLATE;
@@ -163,12 +164,10 @@ var playerListElement = document.getElementById('pl-ul');
 
 //initFirebaseAuth();
 var app;
-var momentvar = moment();
 
 function init() {
     try {
         app = firebase.app();
-        console.log('moment: ' + momentvar);
     }
     catch (e) {
         console.error(e);

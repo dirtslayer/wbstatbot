@@ -1,10 +1,12 @@
 body {
     background-color: lightseagreen;
+    background-image: url('fish2.png');
   }
 
   div.player {
       color: green;
       font-size: x-small;
+      display: none;
   }
 
   
@@ -26,4 +28,21 @@ body {
     margin: 10px;
     
     
+}
+
+.statarea{
+    display: inline-block;
+    color: purple;
+    
+    width: 200px;
+}
+
+#load {
+    display: none;
+}
+
+h1 {
+    font-size: x-large;
+    text-align: center;
+    color: white;
 }
