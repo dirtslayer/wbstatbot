@@ -52,29 +52,20 @@ function initFirebaseAuth() {
     } */
   }
 
- 
-
-
   function loadPlayers() {
-      
-    var query = firebase.firestore()
-                    .collection('players')
-                    .orderBy('timestamp', 'desc')
-                    .limit(50);
-    
-    // Start listening to the query.
-    query.onSnapshot(function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {
-        if (change.type === 'removed') {
-          deletePlayer(change.doc.id);
-        } else {
-          var player = change.doc.data();
-          displayPlayer(change.doc.id, player.timestamp, player.name,
-                         player.pid);
-        }
-      });
-    });
-  }
+    firebase.firestore().collection('players').get().then(
+      function (res) {
+        res.forEach( function (doc) {
+          console.log('load players' + doc.data());
+          var player = doc.data();
+          displayPlayer(doc.id, player.timestamp, player.name,
+            player.pid);
+
+        });
+      }
+    );
+  } 
+
   function deletePlayer(id) {
     var div = document.getElementById(id);
    
@@ -82,6 +73,7 @@ function initFirebaseAuth() {
       div.parentNode.removeChild(div);
     }
   }
+
   var PLAYER_TEMPLATE =
     '<li>' +
     
