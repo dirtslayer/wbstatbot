@@ -368,3 +368,107 @@ exports.serverip = functions.runWith(runtimeOpts).https.onRequest( async (reques
     return null;
 
 });
+
+
+
+
+
+
+async function deleteDuplicatesfor(PID) {
+
+    const db = admin.firestore();
+    const snapshotsRef = db.collection('snapshots');
+    const latestsnapRes = await snapshotsRef.where('PID', '==', PID).orderBy('Date','desc').get(); 
+
+    //const latestsnapRes = await snapshotsRef.get(); 
+    var results = [];
+
+    if (latestsnapRes.empty) {
+        console.log('No matching documents.');
+        return;
+      }  
+    latestsnapRes.forEach(doc => {
+        //console.log(doc.id, '=>', doc.data());
+        results.push(doc);
+    });
+    //console.log(JSON.stringify(results[0]));
+
+   // console.log( typeof results[0] );
+
+
+
+    console.log (results.length);
+
+
+   
+
+    var delres = [];
+    var fres = results.filter(function(item, pos, ary) {
+             var btoret = (!pos || item.data().Kills != ary[pos - 1].data().Kills);
+             if (!btoret) {
+                 delres.push(item);
+             }
+             return btoret;
+        });
+    
+
+
+
+
+
+    console.log( delres.length + ' ' + fres.length );
+
+
+
+    delres.forEach(async (doc) => {        
+       //await doc.delete();
+       console.log (doc.id);
+
+       db.collection("snapshots").doc(doc.id).delete().then(function() {
+        console.log("Document successfully deleted!");
+    }).catch(function(error) {
+        console.error("Error removing document: ", error);
+    });
+
+
+
+
+
+
+    });
+
+    return delres.length + ' ' + fres.length;
+
+
+}
+
+
+async function deleteDuplicates() {
+    const db = admin.firestore();
+
+    const snapshot = await db.collection('players').get();
+    snapshot.forEach(async (doc) => {
+        
+        var pid = doc.data().pid;
+        var did = doc.id;
+
+        var ls = await deleteDuplicatesfor(pid);
+        
+          
+    });
+
+
+//return await deleteDuplicatesfor('5aeba7b4fd3c7a805dbbd69d');
+    
+return 'dd';
+
+}
+
+
+exports.deleteduplicates = functions.runWith(runtimeOpts).https.onRequest( async (request, response) => {
+    var len = await deleteDuplicates();
+    response.contentType("text/plain");
+    response.send('len:'+len);
+    return null;
+
+});
