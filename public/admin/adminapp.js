@@ -20,7 +20,6 @@ function initFirebaseAuth() {
     firebase.auth().onAuthStateChanged(authStateObserver);
   }
 
-
   function authStateObserver(user) {
    /* if (user) { // User is signed in!
       // Get the signed-in user's profile pic and name.
@@ -52,29 +51,6 @@ function initFirebaseAuth() {
     } */
   }
 
- function onSnapshotAllSubmit(e) {
-   e.preventDefault();
-   var query = firebase.firestore()
-                    .collection('players')
-                    .orderBy('timestamp', 'desc')
-                    .limit(50);
-    
-
-                    query.onSnapshot(function(snapshot) {
-                      snapshot.docChanges().forEach(function(change) {
-                        if (change.type === 'removed') {
-                          deletePlayer(change.doc.id);
-                        } else {
-                          var player = change.doc.data();
-                          console.log('log: ',change.doc.id, player.timestamp, player.name,
-                                         player.pid);
-                        }
-                      });
-                    });
-
- }
-
-
 function onPlayerAddSubmit(e) {
     e.preventDefault();
     // Check that the user entered a message and is signed in.
@@ -89,37 +65,7 @@ function onPlayerAddSubmit(e) {
     }
   }
 
-
-
-
-
-
-
-
-////////////////////////////////////////////////////
-
-
-//////////////////////////
-
-
-
-
-
-
-///////////////////
-
-
-
-
-
-
-
-
-
-
-
-// todo: change the field called text to pid, and then, test
-  function savePlayer(PID) {
+function savePlayer(PID) {
     // TODO 7: Push a new message to Firebase.
     return firebase.firestore().collection('players').add({
       name: '',
@@ -131,25 +77,19 @@ function onPlayerAddSubmit(e) {
   }
 
   function loadPlayers() {
-      
-    var query = firebase.firestore()
-                    .collection('players')
-                    .orderBy('timestamp', 'desc')
-                    .limit(50);
-    
-    // Start listening to the query.
-    query.onSnapshot(function(snapshot) {
-      snapshot.docChanges().forEach(function(change) {
-        if (change.type === 'removed') {
-          deletePlayer(change.doc.id);
-        } else {
-          var player = change.doc.data();
-          displayPlayer(change.doc.id, player.timestamp, player.name,
-                         player.pid);
-        }
-      });
-    });
-  }
+    firebase.firestore().collection('players').get().then(
+      function (res) {
+        res.forEach( function (doc) {
+          console.log('load players' + doc.data());
+          var player = doc.data();
+          displayPlayer(doc.id, player.timestamp, player.name,
+            player.pid);
+
+        });
+      }
+    );
+  } 
+
   function deletePlayer(id) {
     var div = document.getElementById(id);
    
@@ -203,7 +143,6 @@ function onPlayerAddSubmit(e) {
     return div;
   }
   
-  // Displays a Message in the UI.
   function displayPlayer(id, timestamp, name, text) {
     var div = document.getElementById(id) || createAndInsertPlayer(id, timestamp);
   
@@ -230,12 +169,7 @@ var playerListElement = document.getElementById('pl-ul');
 var playeraddFormElement = document.getElementById('pl-add-form');
 var playeraddInputElement = document.getElementById('pl-add-text');
 var playeraddsubmitButtonElement = document.getElementById('pl-add-submit');
-
-var snapshotallFormElement = document.getElementById('snapshot-all');
-var snapshotallButtonElement = document.getElementById('snapshot-all-submit');
-
 playeraddFormElement.addEventListener('submit',onPlayerAddSubmit);
-snapshotallFormElement.addEventListener('submit',onSnapshotAllSubmit);
 
 //initFirebaseAuth();
 var app;
