@@ -91,7 +91,7 @@
         playerquery.forEach(function (pdoc) {
           var id = pdoc.id;
           var pid = pdoc.data().pid;
-          snapshotsRef.where('PID', '==', pid).orderBy('Date', 'desc').get().then(function (querysnapshot) {
+          snapshotsRef.where('PID', '==', pid).orderBy('Date', 'desc').where('Date','>', moment().subtract(4,'days').valueOf()).get().then(function (querysnapshot) {
 
             var chartseriesobj = {
               series: [{
@@ -135,7 +135,7 @@
             }, {
               axisX: {
                 type: Chartist.FixedScaleAxis,
-                divisor: 6,
+                divisor: 16,
                 labelInterpolationFnc: function (value) {
                   return moment(value).format('MMM D, HH:MM');
                 }
